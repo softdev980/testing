@@ -15,10 +15,10 @@
     basic.showString("" + (stembot.ping(SBPingUnit.MicroSeconds)))
 
     // Detect the light by reading light sensor
-    basic.showString("" + (stembot.lightSensor(SBLdr.Left)))
-    basic.pause(100)
-    basic.showString("" + (stembot.lightSensor(SBLdr.Right)))
-    basic.pause(100)
+    // basic.showString("" + (stembot.lightSensor(SBLdr.Left)))
+    // basic.pause(100)
+    // basic.showString("" + (stembot.lightSensor(SBLdr.Right)))
+    // basic.pause(100)
 
     // Detect the object by reading line sensor
     basic.showString("" + (stembot.readLine(SBIRSensor.Left)))
