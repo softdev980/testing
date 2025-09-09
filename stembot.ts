@@ -411,13 +411,13 @@ namespace stembot {
       */
     //% weight=70
     //% block="light sensor $side"
-    export function lightSensor(side: SBLdr): number {
-        if (side == SBLdr.Left) {
-            return pins.analogReadPin(AnalogPin.P1); // Example pin
-        } else {
-            return pins.analogReadPin(AnalogPin.P2); // Example pin
-        }
-    }
+    // export function lightSensor(side: SBLdr): number {
+    //     if (side == SBLdr.Left) {
+    //         return pins.analogReadPin(AnalogPin.P1); // Example pin
+    //     } else {
+    //         return pins.analogReadPin(AnalogPin.P2); // Example pin
+    //     }
+    // }
 
     // Block for Read Sonar Unit
     /**

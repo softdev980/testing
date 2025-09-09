@@ -18,7 +18,7 @@ basic.forever(function () {
     basic.showString("" + (stembot.readLine(SBIRSensor.Right)))
 
     // Read Light Sensor (Right side)
-    basic.showString("" + (stembot.lightSensor(SBLdr.Right)))
+    // basic.showString("" + (stembot.lightSensor(SBLdr.Right)))
 
     // Read Sonar Distance (Inches)
     basic.showString("" + (stembot.ping(SBPingUnit.Inches)))
