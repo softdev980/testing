@@ -334,10 +334,10 @@
 
 
 // custom enum for lightSensor function
-enum SBLdr {
-    Left = 0,
-    Right = 1
-}
+// enum SBLdr {
+//     Left = 0,
+//     Right = 1
+// }
 
 // custom enum for IRSensor
 enum SBIRSensor {
