@@ -10,12 +10,8 @@
     "files": [
         "README.md",
         "main.blocks",
-        "main.ts",
         "stembot.ts",
         "icon.png"
-    ],
-    "testFiles": [
-        "test.ts"
     ],
     "public": true,
     "targetVersions": {
