@@ -34,10 +34,10 @@
 // }
 
 
-// Test program that only runs when explicitly started
+// Simple test program - should display nothing until buttons are pressed
 input.onButtonPressed(Button.A, function () {
     stembot.setup();
-    basic.showString("Motor Started");
+    basic.showString("Ready");
 })
 
 input.onButtonPressed(Button.B, function () {
@@ -49,5 +49,5 @@ input.onGesture(Gesture.Shake, function () {
     basic.showString("D:" + stembot.ping(SBPingUnit.Centimeters));
 })
 
-// Initialize only when program starts
-basic.showString("Press A to start");
+// Display nothing at start
+basic.clearScreen();

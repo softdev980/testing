@@ -421,19 +421,6 @@ namespace stembot {
         initMotorPins();
     }
 
-    // Block for setting the Mode of Pin
-    /**
-      * set mode of pin input or output
-      * @param mode mode of pin input or output
-      */
-    //% weight=90
-    //% block="Set pinMode $mode"
-    export function setPinMode(mode: SBMode): void {
-        // This function is kept for compatibility but doesn't do anything
-        // in this implementation since we're not using MCP23017
-        initMotorPins();
-    }
-
     // Block for Line Sensor
     /**
       * detect the object
@@ -446,19 +433,6 @@ namespace stembot {
             return pins.digitalReadPin(DigitalPin.P14);
         else
             return pins.digitalReadPin(DigitalPin.P13);
-    }
-
-    // Block for Light Sensor
-    /**
-      * detect the light
-      * @param side set sensor Left or Right
-      */
-    //% weight=70
-    //% block="light sensor $side"
-    export function lightSensor(side: SBLdr): number {
-        // Since we're not using the MCP23017, this function needs to be reimplemented
-        // or removed. For now, returning a dummy value.
-        return 0;
     }
 
     // Block for Read Sonar Unit
@@ -519,33 +493,6 @@ namespace stembot {
             pins.digitalWritePin(motor2B, 1);
         }
         // For Stop, all pins are already set to 0
-    }
-
-    // Block for Digital Read
-    /**
-      * digital read on selected pin
-      * @param pin set pin Sv5 or Sv6
-      */
-    //% weight=40
-    //% block="digital read $pin"
-    export function digitalRead(pin: SBPin): number {
-        // Since we're not using MCP23017, this needs to be reimplemented
-        // For now, returning a dummy value
-        return 0;
-    }
-
-    // Block for Digital Write
-    /**
-      * digital write on selected pin
-      * @param pin set pin Sv5 or Sv6
-      * @param flag set 0 or 1
-      */
-    //% weight=30
-    //% block="digital write $pin $flag"
-    //% flag.shadow="toggleOnOff"
-    export function digitalWrite(pin: SBPin, flag: boolean): void {
-        // Since we're not using MCP23017, this needs to be reimplemented
-        // For now, do nothing
     }
     
     // New function to control servo
