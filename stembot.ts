@@ -309,6 +309,9 @@ namespace stembot {
         }
     }
 
-    // 🔹 Prevent default "L:O:R:O:D" text when extension loads
+   // Prevent default "LOADING" text from appearing
+basic.forever(function () {
     basic.clearScreen()
+})
+
 }
