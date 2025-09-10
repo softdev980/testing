@@ -10,22 +10,23 @@
 // })
 
 
-
+// Simple test program
 basic.forever(function () {
-    stembot.setPinMode(SBMode.Input)
-
-    // Read Line Sensor (Right side)
-    basic.showString("" + (stembot.readLine(SBIRSensor.Right)))
-
-    // Read Light Sensor (Right side)
-    // basic.showString("" + (stembot.lightSensor(SBLdr.Right)))
-
-    // Read Sonar Distance (Inches)
-    basic.showString("" + (stembot.ping(SBPingUnit.Inches)))
-
-    // Digital Read from Sv6
-    basic.showString("" + (stembot.digitalRead(SBPin.Sv6)))
-
-    // Digital Write to Sv5 (turn OFF)
-    stembot.digitalWrite(SBPin.Sv5, false)
+    stembot.setup();
+    
+    // Test line sensors
+    basic.showString("L:" + stembot.readLine(SBIRSensor.Left));
+    basic.pause(1000);
+    basic.showString("R:" + stembot.readLine(SBIRSensor.Right));
+    basic.pause(1000);
+    
+    // Test ultrasonic sensor
+    basic.showString("D:" + stembot.ping(SBPingUnit.Centimeters));
+    basic.pause(1000);
+    
+    // Test motor movements
+    stembot.moveIt(SBMove.Forward);
+    basic.pause(1000);
+    stembot.moveIt(SBMove.Stop);
+    basic.pause(1000);
 })

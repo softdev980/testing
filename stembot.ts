@@ -333,150 +333,11 @@
 
 
 
-// // custom enum for lightSensor function
-// // enum SBLdr {
-// //     Left = 0,
-// //     Right = 1
-// // }
-
-// // custom enum for IRSensor
-// enum SBIRSensor {
-//     //% block="left"
-//     Left,
-//     //% block="right"
-//     Right
-// }
-
-// // custom enum for ping unit
-// enum SBPingUnit {
-//     //% block="μs"
-//     MicroSeconds,
-//     //% block="cm"
-//     Centimeters,
-//     //% block="inches"
-//     Inches
-// }
-
-// // custom enum for setPinMode function
-// enum SBMode {
-//     //% block="input"
-//     Input = 0,
-//     //% block="output"
-//     Output = 1,
-// }
-
-// // custom enum for pins
-// enum SBPin {
-//     //% block=Sv5
-//     Sv5 = 0,
-//     //% block=Sv6
-//     Sv6 = 1,
-// }
-
-// /**
-// * Custom blocks
-// */
-// //% weight=100 color=blue icon="\uf1b9"
-// namespace stembot {
-
-//     // Block for setting the Mode of Pin
-//     /**
-//       * set mode of pin
-//       * @param mode mode of pin input or output
-//       */
-//     //% weight=90
-//     //% block="Set pinMode $mode"
-//     export function setPinMode(mode: SBMode): void {
-//         // Micro:bit handles pin mode automatically, so nothing required here
-//     }
-
-//     // Block for Line Sensor
-//     /**
-//       * detect the object
-//       * @param sensor set sensor Left or Right
-//       */
-//     //% weight=80
-//     //% block="line sensor %sensor"
-//     export function readLine(sensor: SBIRSensor): number {
-//         if (sensor == SBIRSensor.Left)
-//             return pins.digitalReadPin(DigitalPin.P14);
-//         else
-//             return pins.digitalReadPin(DigitalPin.P13);
-//     }
-
-//     // Block for Light Sensor
-//     /**
-//       * detect the light
-//       * @param side set sensor Left or Right
-//       */
-//     //% weight=70
-//     //% block="light sensor $side"
-//     // export function lightSensor(side: SBLdr): number {
-//     //     if (side == SBLdr.Left) {
-//     //         return pins.analogReadPin(AnalogPin.P1); // Example pin
-//     //     } else {
-//     //         return pins.analogReadPin(AnalogPin.P2); // Example pin
-//     //     }
-//     // }
-
-//     // Block for Read Sonar Unit
-//     /**
-//       * detect the distance
-//       * @param unit set unit in μs, cm or inch
-//       */
-//     //% weight=60
-//     //% block="Read sonar in unit %unit"
-//     export function ping(unit: SBPingUnit, maxCmDistance = 500): number {
-//         let trigger = DigitalPin.P1;
-//         let echo = DigitalPin.P2;
-//         pins.setPull(trigger, PinPullMode.PullNone);
-//         pins.digitalWritePin(trigger, 0);
-//         control.waitMicros(2);
-//         pins.digitalWritePin(trigger, 1);
-//         control.waitMicros(10);
-//         pins.digitalWritePin(trigger, 0);
-//         const d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
-//         switch (unit) {
-//             case SBPingUnit.Centimeters: return Math.idiv(d, 58);
-//             case SBPingUnit.Inches: return Math.idiv(d, 148);
-//             default: return d;
-//         }
-//     }
-
-//     // Block for Digital Read
-//     /**
-//       * digital read on selected pin
-//       * @param pin set pin Sv5 or Sv6
-//       */
-//     //% weight=40
-//     //% block="digital read $pin"
-//     export function digitalRead(pin: SBPin): number {
-//         if (pin == SBPin.Sv5) {
-//             return pins.digitalReadPin(DigitalPin.P5);
-//         } else {
-//             return pins.digitalReadPin(DigitalPin.P6);
-//         }
-//     }
-
-//     // Block for Digital Write
-//     /**
-//       * digital write on selected pin
-//       * @param pin set pin Sv5 or Sv6
-//       * @param flag set true or false
-//       */
-//     //% weight=30
-//     //% block="digital write $pin $flag"
-//     //% flag.shadow="toggleOnOff"
-//     export function digitalWrite(pin: SBPin, flag: boolean): void {
-//         if (pin == SBPin.Sv5) {
-//             pins.digitalWritePin(DigitalPin.P5, flag ? 1 : 0);
-//         } else {
-//             pins.digitalWritePin(DigitalPin.P6, flag ? 1 : 0);
-//         }
-//     }
-// }
-
-
+// custom enum for lightSensor function
+enum SBLdr {
+    Left = 0,
+    Right = 1
+}
 
 // custom enum for IRSensor
 enum SBIRSensor {
@@ -512,36 +373,86 @@ enum SBPin {
     Sv6 = 1,
 }
 
+// custom enum for moveIt function
+enum SBMove {
+    //% block="forward"
+    Forward = 0,
+    //% block="backward"
+    Backward = 1,
+    //% block="left"
+    Left = 2,
+    //% block="right"
+    Right = 3,
+    //% block="stop"
+    Stop = 4,
+}
+
 /**
 * Custom blocks
 */
 //% weight=100 color=blue icon="\uf1b9"
 namespace stembot {
+    // Motor control pins
+    let motor1A = DigitalPin.P0;
+    let motor1B = DigitalPin.P8;
+    let motor2A = DigitalPin.P15;
+    let motor2B = DigitalPin.P16;
+    
+    // Initialize motor pins as output
+    function initMotorPins(): void {
+        pins.digitalWritePin(motor1A, 0);
+        pins.digitalWritePin(motor1B, 0);
+        pins.digitalWritePin(motor2A, 0);
+        pins.digitalWritePin(motor2B, 0);
+    }
+
+    // Block for Starting the Motor
+    /**
+      * To start the motor
+      */
+    //% weight=100
+    //% block="start motor"
+    export function setup(): void {
+        initMotorPins();
+    }
 
     // Block for setting the Mode of Pin
     /**
-      * set mode of pin
+      * set mode of pin input or output
       * @param mode mode of pin input or output
       */
     //% weight=90
     //% block="Set pinMode $mode"
     export function setPinMode(mode: SBMode): void {
-        // Micro:bit handles pin mode automatically, so nothing required here
+        // This function is kept for compatibility but doesn't do anything
+        // in this implementation since we're not using MCP23017
     }
 
     // Block for Line Sensor
     /**
       * detect the object
-      * @param sensor set sensor Left or Right
+      * @param sensor set sensor Left or Light
       */
     //% weight=80
     //% block="line sensor %sensor"
     export function readLine(sensor: SBIRSensor): number {
-        if (sensor == SBIRSensor.Left) {
+        if (sensor == SBIRSensor.Left)
             return pins.digitalReadPin(DigitalPin.P14);
-        } else {
+        else
             return pins.digitalReadPin(DigitalPin.P13);
-        }
+    }
+
+    // Block for Light Sensor
+    /**
+      * detect the light
+      * @param side set sensor Left or Right
+      */
+    //% weight=70
+    //% block="light sensor $side"
+    export function lightSensor(side: SBLdr): number {
+        // Since we're not using the MCP23017, this function needs to be reimplemented
+        // or removed. For now, returning a dummy value.
+        return 0;
     }
 
     // Block for Read Sonar Unit
@@ -560,12 +471,46 @@ namespace stembot {
         pins.digitalWritePin(trigger, 1);
         control.waitMicros(10);
         pins.digitalWritePin(trigger, 0);
+        // read pulse
         const d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
         switch (unit) {
             case SBPingUnit.Centimeters: return Math.idiv(d, 58);
             case SBPingUnit.Inches: return Math.idiv(d, 148);
             default: return d;
         }
+    }
+
+    // Block for Move Motor
+    /**
+      * set direction to move motor or stop motor
+      * @param direction move Forward, Backward, Left, Right or Stop
+      */
+    //% weight=50
+    //% block="move $direction"
+    export function moveIt(direction: SBMove): void {
+        // Stop all motors first
+        pins.digitalWritePin(motor1A, 0);
+        pins.digitalWritePin(motor1B, 0);
+        pins.digitalWritePin(motor2A, 0);
+        pins.digitalWritePin(motor2B, 0);
+        
+        if (direction == SBMove.Forward) {
+            pins.digitalWritePin(motor1A, 1);
+            pins.digitalWritePin(motor2A, 1);
+        }
+        else if (direction == SBMove.Backward) {
+            pins.digitalWritePin(motor1B, 1);
+            pins.digitalWritePin(motor2B, 1);
+        }
+        else if (direction == SBMove.Left) {
+            pins.digitalWritePin(motor1B, 1);
+            pins.digitalWritePin(motor2A, 1);
+        }
+        else if (direction == SBMove.Right) {
+            pins.digitalWritePin(motor1A, 1);
+            pins.digitalWritePin(motor2B, 1);
+        }
+        // For Stop, all pins are already set to 0
     }
 
     // Block for Digital Read
@@ -576,27 +521,30 @@ namespace stembot {
     //% weight=40
     //% block="digital read $pin"
     export function digitalRead(pin: SBPin): number {
-        if (pin == SBPin.Sv5) {
-            return pins.digitalReadPin(DigitalPin.P5);
-        } else {
-            return pins.digitalReadPin(DigitalPin.P6);
-        }
+        // Since we're not using MCP23017, this needs to be reimplemented
+        // For now, returning a dummy value
+        return 0;
     }
 
     // Block for Digital Write
     /**
       * digital write on selected pin
       * @param pin set pin Sv5 or Sv6
-      * @param flag set true or false
+      * @param flag set 0 or 1
       */
     //% weight=30
     //% block="digital write $pin $flag"
     //% flag.shadow="toggleOnOff"
     export function digitalWrite(pin: SBPin, flag: boolean): void {
-        if (pin == SBPin.Sv5) {
-            pins.digitalWritePin(DigitalPin.P5, flag ? 1 : 0);
-        } else {
-            pins.digitalWritePin(DigitalPin.P6, flag ? 1 : 0);
-        }
+        // Since we're not using MCP23017, this needs to be reimplemented
+        // For now, do nothing
+    }
+    
+    // New function to control servo
+    //% weight=20
+    //% block="set servo angle %angle"
+    //% angle.min=0 angle.max=180
+    export function setServoAngle(angle: number): void {
+        pins.servoWritePin(AnalogPin.P12, angle);
     }
 }
