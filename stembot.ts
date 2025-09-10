@@ -331,6 +331,8 @@
 //     }
 // }
 
+
+
 // custom enum for lightSensor function
 enum SBLdr {
     Left = 0,
@@ -396,19 +398,12 @@ namespace stembot {
     let motor2A = DigitalPin.P15;
     let motor2B = DigitalPin.P16;
     
-    // Track if initialized to prevent multiple initializations
-    let isInitialized = false;
-    
     // Initialize motor pins as output
     function initMotorPins(): void {
-        if (isInitialized) return;
-        
         pins.digitalWritePin(motor1A, 0);
         pins.digitalWritePin(motor1B, 0);
         pins.digitalWritePin(motor2A, 0);
         pins.digitalWritePin(motor2B, 0);
-        
-        isInitialized = true;
     }
 
     // Block for Starting the Motor
@@ -419,6 +414,18 @@ namespace stembot {
     //% block="start motor"
     export function setup(): void {
         initMotorPins();
+    }
+
+    // Block for setting the Mode of Pin
+    /**
+      * set mode of pin input or output
+      * @param mode mode of pin input or output
+      */
+    //% weight=90
+    //% block="Set pinMode $mode"
+    export function setPinMode(mode: SBMode): void {
+        // This function is kept for compatibility but doesn't do anything
+        // in this implementation since we're not using MCP23017
     }
 
     // Block for Line Sensor
@@ -433,6 +440,19 @@ namespace stembot {
             return pins.digitalReadPin(DigitalPin.P14);
         else
             return pins.digitalReadPin(DigitalPin.P13);
+    }
+
+    // Block for Light Sensor
+    /**
+      * detect the light
+      * @param side set sensor Left or Right
+      */
+    //% weight=70
+    //% block="light sensor $side"
+    export function lightSensor(side: SBLdr): number {
+        // Since we're not using the MCP23017, this function needs to be reimplemented
+        // or removed. For now, returning a dummy value.
+        return 0;
     }
 
     // Block for Read Sonar Unit
@@ -468,8 +488,6 @@ namespace stembot {
     //% weight=50
     //% block="move $direction"
     export function moveIt(direction: SBMove): void {
-        initMotorPins();
-        
         // Stop all motors first
         pins.digitalWritePin(motor1A, 0);
         pins.digitalWritePin(motor1B, 0);
@@ -493,6 +511,33 @@ namespace stembot {
             pins.digitalWritePin(motor2B, 1);
         }
         // For Stop, all pins are already set to 0
+    }
+
+    // Block for Digital Read
+    /**
+      * digital read on selected pin
+      * @param pin set pin Sv5 or Sv6
+      */
+    //% weight=40
+    //% block="digital read $pin"
+    export function digitalRead(pin: SBPin): number {
+        // Since we're not using MCP23017, this needs to be reimplemented
+        // For now, returning a dummy value
+        return 0;
+    }
+
+    // Block for Digital Write
+    /**
+      * digital write on selected pin
+      * @param pin set pin Sv5 or Sv6
+      * @param flag set 0 or 1
+      */
+    //% weight=30
+    //% block="digital write $pin $flag"
+    //% flag.shadow="toggleOnOff"
+    export function digitalWrite(pin: SBPin, flag: boolean): void {
+        // Since we're not using MCP23017, this needs to be reimplemented
+        // For now, do nothing
     }
     
     // New function to control servo
