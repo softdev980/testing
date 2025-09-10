@@ -331,8 +331,6 @@
 //     }
 // }
 
-
-
 // custom enum for lightSensor function
 enum SBLdr {
     Left = 0,
@@ -398,12 +396,19 @@ namespace stembot {
     let motor2A = DigitalPin.P15;
     let motor2B = DigitalPin.P16;
     
+    // Track if initialized to prevent multiple initializations
+    let isInitialized = false;
+    
     // Initialize motor pins as output
     function initMotorPins(): void {
+        if (isInitialized) return;
+        
         pins.digitalWritePin(motor1A, 0);
         pins.digitalWritePin(motor1B, 0);
         pins.digitalWritePin(motor2A, 0);
         pins.digitalWritePin(motor2B, 0);
+        
+        isInitialized = true;
     }
 
     // Block for Starting the Motor
@@ -426,6 +431,7 @@ namespace stembot {
     export function setPinMode(mode: SBMode): void {
         // This function is kept for compatibility but doesn't do anything
         // in this implementation since we're not using MCP23017
+        initMotorPins();
     }
 
     // Block for Line Sensor
@@ -488,6 +494,8 @@ namespace stembot {
     //% weight=50
     //% block="move $direction"
     export function moveIt(direction: SBMove): void {
+        initMotorPins();
+        
         // Stop all motors first
         pins.digitalWritePin(motor1A, 0);
         pins.digitalWritePin(motor1B, 0);

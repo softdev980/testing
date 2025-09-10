@@ -34,12 +34,14 @@
 // }
 
 
-// Test individual components with button presses
+// Test program that only runs when explicitly started
 input.onButtonPressed(Button.A, function () {
-    basic.showString("L:" + stembot.readLine(SBIRSensor.Left));
+    stembot.setup();
+    basic.showString("Motor Started");
 })
 
 input.onButtonPressed(Button.B, function () {
+    basic.showString("L:" + stembot.readLine(SBIRSensor.Left));
     basic.showString("R:" + stembot.readLine(SBIRSensor.Right));
 })
 
@@ -47,13 +49,5 @@ input.onGesture(Gesture.Shake, function () {
     basic.showString("D:" + stembot.ping(SBPingUnit.Centimeters));
 })
 
-// Control motors with logo
-input.onLogoEvent(TouchButtonEvent.Pressed, function () {
-    stembot.moveIt(SBMove.Forward);
-    basic.pause(1000);
-    stembot.moveIt(SBMove.Stop);
-})
-
-// Initialize
-stembot.setup();
-basic.showString("Ready");
+// Initialize only when program starts
+basic.showString("Press A to start");
