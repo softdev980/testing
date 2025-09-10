@@ -38,12 +38,6 @@ enum SBPin {
     Sv6 = 1,
 }
 
-// address for MCP23017
-enum SBAddress {
-    //% block=0x20
-    A20 = 0x20,
-}
-
 // custom enum for SetPort
 enum SBSetPort {
     //% block=PORT_A
@@ -83,27 +77,28 @@ namespace stembot {
     let outputABuffer = 0;
     let outputBBuffer = 0;
 
-    // address for MCP23017
-    let myMCP23017Address = SBAddress.A20
-
     export function setPortAsOutput(port: SBSetPort) {
-        pins.i2cWriteNumber(myMCP23017Address, port + 0x00, NumberFormat.UInt16BE)
+        pins.i2cWriteNumber(0x20, port + 0x00, NumberFormat.UInt16BE)
     }
-    export function setupSimplePulsingOnAddress(address: SBAddress) {
-        myMCP23017Address = address
+
+    export function setupSimplePulsing() {
         setPortAsOutput(SBSetPort.A)
     }
+
     export function setOutputA(bit: number) {
         outputABuffer = outputABuffer | (1 << bit)
     }
+
     export function clearOutputA(bit: number) {
         let tempMask = 1 << bit
         tempMask = tempMask ^ 0B11111111
         outputABuffer = outputABuffer & tempMask
     }
+
     export function writeNumberToPort(port: SBREG_PIO, value: number) {
-        pins.i2cWriteNumber(myMCP23017Address, port + value, NumberFormat.UInt16BE)
+        pins.i2cWriteNumber(0x20, port + value, NumberFormat.UInt16BE)
     }
+
     export function updateOutputA() {
         writeNumberToPort(4608, outputABuffer)
     }
@@ -114,7 +109,7 @@ namespace stembot {
     //% weight=100
     //% block="start motor"
     export function setup(): void {
-        setupSimplePulsingOnAddress(SBAddress.A20);
+        setupSimplePulsing();
     }
 
     /**
@@ -125,7 +120,7 @@ namespace stembot {
     //% block="Set pinMode $mode"
     export function setPinMode(mode: SBMode): void {
         if (mode == 1) {
-            setupSimplePulsingOnAddress(SBAddress.A20);
+            setupSimplePulsing();
         }
     }
 
@@ -147,8 +142,8 @@ namespace stembot {
     //% weight=70
     //% block="light sensor $side"
     export function lightSensor(side: SBLdr): number {
-        pins.i2cWriteNumber(32, 19, NumberFormat.Int8BE)
-        let ldrRead = pins.i2cReadNumber(32, NumberFormat.Int8LE);
+        pins.i2cWriteNumber(0x20, 19, NumberFormat.Int8BE)
+        let ldrRead = pins.i2cReadNumber(0x20, NumberFormat.Int8LE);
         if (side == 0) {
             if ((ldrRead == 4 || ldrRead == 42) || (ldrRead == -124)) {
                 return 1;
@@ -257,8 +252,8 @@ namespace stembot {
     //% weight=40
     //% block="digital read $pin"
     export function digitalRead(pin: SBPin): number {
-        pins.i2cWriteNumber(32, 18, NumberFormat.Int8BE)
-        let read_pin = pins.i2cReadNumber(32, NumberFormat.Int8LE);
+        pins.i2cWriteNumber(0x20, 18, NumberFormat.Int8BE)
+        let read_pin = pins.i2cReadNumber(0x20, NumberFormat.Int8LE);
         if (pin == 0) {
             if (read_pin >= 10 || read_pin == -64) {
                 return 1;
@@ -310,8 +305,7 @@ namespace stembot {
     }
 
    // Prevent default "LOADING" text from appearing
-basic.forever(function () {
-    basic.clearScreen()
-})
-
+   control.inBackground(function () {
+       basic.clearScreen()
+   })
 }
