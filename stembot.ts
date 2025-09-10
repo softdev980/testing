@@ -1,4 +1,3 @@
-
 // custom enum for lightSensor function
 enum SBLdr {
     Left = 0,
@@ -39,7 +38,7 @@ enum SBPin {
     Sv6 = 1,
 }
 
-// address for MCP23017 (configurable by tying pins 15,16,17 on the mcp23017 high or low)
+// address for MCP23017
 enum SBAddress {
     //% block=0x20
     A20 = 0x20,
@@ -93,7 +92,6 @@ namespace stembot {
     export function setupSimplePulsingOnAddress(address: SBAddress) {
         myMCP23017Address = address
         setPortAsOutput(SBSetPort.A)
-        // setPortAsOutput(SBSetPort.B)
     }
     export function setOutputA(bit: number) {
         outputABuffer = outputABuffer | (1 << bit)
@@ -110,7 +108,6 @@ namespace stembot {
         writeNumberToPort(4608, outputABuffer)
     }
 
-    // Block for Starting the Motor
     /**
       * To start the motor
       */
@@ -118,10 +115,8 @@ namespace stembot {
     //% block="start motor"
     export function setup(): void {
         setupSimplePulsingOnAddress(SBAddress.A20);
-        //setPortAsOutput(SBSetPort.A);
     }
 
-    // Block for setting the Mode of Pin
     /**
       * set mode of pin
       * @param mode mode of pin input or output
@@ -131,14 +126,11 @@ namespace stembot {
     export function setPinMode(mode: SBMode): void {
         if (mode == 1) {
             setupSimplePulsingOnAddress(SBAddress.A20);
-            //setPortAsOutput(SBSetPort.A);
         }
     }
 
-    // Block for Line Sensor
     /**
       * detect the object
-      * @param sensor set sensor Left or Light
       */
     //% weight=80
     //% block="line sensor %sensor"
@@ -149,10 +141,8 @@ namespace stembot {
             return pins.digitalReadPin(DigitalPin.P13);
     }
 
-    // Block for Light Sensor
     /**
       * detect the light
-      * @param side set sensor Left or Right
       */
     //% weight=70
     //% block="light sensor $side"
@@ -186,10 +176,8 @@ namespace stembot {
         }
     }
 
-    // Block for Read Sonar Unit
     /**
       * detect the distance
-      * @param unit set unit in μs, cm or inch
       */
     //% weight=60
     //% block="Read sonar in unit %unit"
@@ -202,7 +190,6 @@ namespace stembot {
         pins.digitalWritePin(trigger, 1);
         control.waitMicros(10);
         pins.digitalWritePin(trigger, 0);
-        // read pulse
         const d = pins.pulseIn(pecho, PulseValue.High, maxCmDistance * 58);
         switch (unit) {
             case SBPingUnit.Centimeters: return Math.idiv(d, 58);
@@ -211,10 +198,8 @@ namespace stembot {
         }
     }
 
-    // Block for Move Motor
     /**
       * set direction to move motor or stop motor
-      * @param direction move Forward, Backward, Left, Right or Stop
       */
     //% weight=50
     //% block="move $direction"
@@ -266,10 +251,8 @@ namespace stembot {
         }
     }
 
-    // Block for Digital Read
     /**
       * digital read on selected pin
-      * @param pin set pin Sv5 or Sv6
       */
     //% weight=40
     //% block="digital read $pin"
@@ -297,11 +280,8 @@ namespace stembot {
         }
     }
 
-    // Block for Digital Write
     /**
       * digital write on selected pin
-      * @param pin set pin Sv5 or Sv6
-      * @param flag set 0 or 1
       */
     //% weight=30
     //% block="digital write $pin $flag"
@@ -325,9 +305,10 @@ namespace stembot {
             else {
                 clearOutputA(7)
                 updateOutputA()
-
             }
         }
     }
+
+    // 🔹 Prevent default "L:O:R:O:D" text when extension loads
     basic.clearScreen()
 }
